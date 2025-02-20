@@ -58,6 +58,20 @@ main:
 Interesting observations:
 1. The `<main+20> jb` instruction jumps to the `<main+35> mov` instruction to avoid the `ret` instruction.
 2. Also, the `<main+74> jmp` instruction jumps to `<main+92>` instruction. This is to skip over the panic handling code rust inserts to ensure some type of consistency.
+3. Rust inserts overflow checks (e.g., `seto` and `jo` instructions) to ensure safety. These checks add extra instructions to the loop body, increasing the runtime.
+4. The `for i in 0..NUM` syntax uses iterators, which introduce additional control flow and function calls (e.g., `next()`). This results in more complex assembly and slower execution compared to a simple while loop.
 
 ## Results/Analysis
 Even if the instructions that handle the ret and panic were removed, the number of instructions emitted by the rust compiler is larger than that of c++. Additionally, there are more jump instructions taken per loop cycle. Even without considering the overhead introduced by additional jump instructions (assuming perfect speculative execution and other branch prediction hardware on modern cpus), longer loop body is probably contributing to the longer execution time than c++.
+
+The measurable overhead in Rust loops, particularly with the `for i in 0..N syntax`, is primarily due to:
+- Safety Mechanisms: Rust's default overflow checks and other safety guarantees introduce additional instructions.
+- Iterator-Based Loops: The `for` loop in Rust uses iterators, which add overhead compared to a simple counter-based loop.
+- Control Flow Complexity: Rust's assembly contains more jump instructions and a longer loop body, which can negatively impact performance.
+
+The `for i in 0..N syntax` in Rust is implemented using iterators, which involve:
+- Creating a range `(0..N)`.
+- Calling `next()` on the iterator for each iteration.
+- Handling the iterator's state and control flow.
+
+This additional complexity results in more instructions and slower execution compared to a simple for loop.
