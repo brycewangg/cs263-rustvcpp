@@ -6,3 +6,12 @@ The programs will be using LLVM as the compiler backend (clang++ for c++ and rus
 
 ### x86_64
 The main target machine architecture is x86_64 (64 bit).
+
+## Progress Report/Comments
+
+### 02-21-2025
+There is no source code updates for me this week, but I did the following:
+- Tried using the `perf` utility to profile programs. There were no issues so far.
+- Also tried installing `AMD uProf`. Unfortunately does not support the Linux distro I am using. Might have to revisit this tool later.
+
+- Continued learning rust, including threads, so I can compare them to `c`/`cpp` implementations.
