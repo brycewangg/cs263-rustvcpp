@@ -75,3 +75,40 @@ The `for i in 0..N syntax` in Rust is implemented using iterators, which involve
 - Handling the iterator's state and control flow.
 
 This additional complexity results in more instructions and slower execution compared to a simple for loop.
+
+## O3 Optimization Compiling
+The source code and assembly code when applying O3 optimization on the for loop implementation is shown below:
+```rust
+const NUM: u32 = 1000000000;
+
+let mut x: f64 = 1.0;
+for _ in 0..NUM {
+    x += 1.0;
+}
+println!("{}", x);
+```
+
+```asm
+0x000055555555bf41 <+17>:	data16 data16 data16 data16 data16 cs nop WORD PTR [rax+rax*1+0x0]
+0x000055555555bf50 <+32>:	addsd  xmm1,xmm0
+0x000055555555bf54 <+36>:	addsd  xmm1,xmm0
+0x000055555555bf58 <+40>:	addsd  xmm1,xmm0
+0x000055555555bf5c <+44>:	addsd  xmm1,xmm0
+0x000055555555bf60 <+48>:	addsd  xmm1,xmm0
+0x000055555555bf64 <+52>:	addsd  xmm1,xmm0
+0x000055555555bf68 <+56>:	addsd  xmm1,xmm0
+0x000055555555bf6c <+60>:	addsd  xmm1,xmm0
+0x000055555555bf70 <+64>:	addsd  xmm1,xmm0
+0x000055555555bf74 <+68>:	addsd  xmm1,xmm0
+0x000055555555bf78 <+72>:	add    eax,0xfffffff6
+0x000055555555bf7b <+75>:	jne    0x55555555bf50 <_ZN10loop_fp_O34main17h5f1a313573789bacE+32>
+```
+
+This execution time is shown below:
+```
+real	0m0.598s
+user	0m0.597s
+sys	0m0.000s
+```
+
+The assembly code for rust and cpp when using the -O3 optimization flag is exactly the same and hence the same execution speed. It is interesting that the compiler is able to optimize away the iterator logic in the rust implementation.

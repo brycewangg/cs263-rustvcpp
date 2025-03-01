@@ -33,3 +33,45 @@ main:
     0x000055555555515b <+59>:	jmp    0x555555555140 <main(int, char**)+32>
 ```
 I also tried loop_v2.cpp but it's the same asm code
+
+## O3 Optimization Results
+
+```c++
+#include <iostream>
+
+#define NUM 1000000000
+
+int main(int argc, char *argv[]) {
+	double x = 1.0;
+	int i = 0;
+	while (i < NUM) {
+		x += 1.0;
+		i += 1;
+	}
+	std::cout << x << std::endl;
+	return 0;
+}
+```
+
+```asm
+0x0000555555555195 <+21>:	data16 cs nop WORD PTR [rax+rax*1+0x0]
+0x00005555555551a0 <+32>:	addsd  xmm0,xmm1
+0x00005555555551a4 <+36>:	addsd  xmm0,xmm1
+0x00005555555551a8 <+40>:	addsd  xmm0,xmm1
+0x00005555555551ac <+44>:	addsd  xmm0,xmm1
+0x00005555555551b0 <+48>:	addsd  xmm0,xmm1
+0x00005555555551b4 <+52>:	addsd  xmm0,xmm1
+0x00005555555551b8 <+56>:	addsd  xmm0,xmm1
+0x00005555555551bc <+60>:	addsd  xmm0,xmm1
+0x00005555555551c0 <+64>:	addsd  xmm0,xmm1
+0x00005555555551c4 <+68>:	addsd  xmm0,xmm1
+0x00005555555551c8 <+72>:	add    eax,0xfffffff6
+0x00005555555551cb <+75>:	jne    0x5555555551a0 <main(int, char**)+32>
+```
+
+The execution time is shown below:
+```
+real	0m0.598s
+user	0m0.597s
+sys	0m0.000s
+```
