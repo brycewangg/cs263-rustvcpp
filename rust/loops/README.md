@@ -112,3 +112,6 @@ sys	0m0.000s
 ```
 
 The assembly code for rust and cpp when using the -O3 optimization flag is exactly the same and hence the same execution speed. It is interesting that the compiler is able to optimize away the iterator logic in the rust implementation.
+
+### NOTES
+- Any testing with optimization should (generally) be used with floats/doubles since integer values will get optimized away (precomputed) during compilation.

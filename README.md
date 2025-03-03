@@ -15,3 +15,16 @@ There is no source code updates for me this week, but I did the following:
 - Also tried installing `AMD uProf`. Unfortunately does not support the Linux distro I am using. Might have to revisit this tool later.
 
 - Continued learning rust, including threads, so I can compare them to `c`/`cpp` implementations.
+
+## Final Report Plan
+1. Finish the thread micro benchmark <===
+    - General runtime.
+2. Test with different optimization levels (O3)
+    - threads and spot check the vectors as well
+3. Rerun/test on M1 mac cpu also
+
+By this weekend
+
+-----
+4. Find some real world applications? If time permits
+5. Maybe explore cache behavior with `perf` utility?
