@@ -1,17 +1,18 @@
-use std::sync::Mutex;
 use std::thread;
 
+fn increment() {
+    let mut counter:f64 = 0.0;
+    for _ in 0..100000 {
+        counter += 1.0;
+    }
+}
+
 fn main() {
-    let counter = Mutex::new(0);
     let mut handles = vec![];
 
     for _ in 0..10 {
-        let counter = counter.clone();
-        let handle = thread::spawn(move || {
-            for _ in 0..100000 {
-                let mut num = counter.lock().unwrap();
-                *num += 1;
-            }
+        let handle = thread::spawn( || {
+            increment();
         });
         handles.push(handle);
     }
@@ -20,5 +21,5 @@ fn main() {
         handle.join().unwrap();
     }
 
-    println!("Counter: {}", *counter.lock().unwrap());
+    println!("Threads finished");
 }

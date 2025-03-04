@@ -2,9 +2,8 @@
 #include <thread>
 #include <vector>
 
-int counter = 0;
-
 void increment() {
+    double counter = 0;
     for (int i = 0; i < 100000; i++) {
         counter++;
     }
@@ -13,11 +12,12 @@ void increment() {
 int main() {
     std::vector<std::thread> threads;
     for (int i = 0; i < 10; i++) {
-        threads.emplace_back(increment);
+        threads.push_back(std::thread(increment));
     }
     for (auto& t : threads) {
         t.join();
     }
-    std::cout << "Counter: " << counter << std::endl;
+
+    std::cout << "Threads finished" << std::endl;
     return 0;
 }
