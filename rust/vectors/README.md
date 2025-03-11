@@ -244,7 +244,42 @@ Dump of assembler code for function _ZN4core5slice3raw14from_raw_parts18precondi
 
 
 ## Results
-We will be mainly comparing the C++ vector operation `at()` and the rust vector operation `get()` for safe element accesses. Under these conditions, the rust implementation has more assembly code than c++ code already (even without tracing the indirect calls (`call rax`) instructions.
+We will be mainly comparing the C++ vector operation `at()` and the rust vector operation `get()` for safe element accesses. Under these conditions, the rust implementation has more assembly code than c++ code already (even without tracing the indirect calls (`call rax`) instructions).
+
+
+# Optimized vector access
+C++ safe `at()` access
+
+```asm
+Dump of assembler code for function main(int, char**):
+   0x0000555555555140 <+0>:     push   rax
+=> 0x0000555555555141 <+1>:     lea    rdi,[rip+0xebc]        # 0x555555556004
+   0x0000555555555148 <+8>:     mov    esi,0x5
+   0x000055555555514d <+13>:    mov    edx,0x3
+   0x0000555555555152 <+18>:    xor    eax,eax
+   0x0000555555555154 <+20>:    call   0x555555555030 <_ZSt24__throw_out_of_range_fmtPKcz@plt>
+```
+
+
+Rust safe `get()` access
+
+```asm
+Dump of assembler code for function main:
+=> 0x000055555555ac40 <+0>:     push   rax
+   0x000055555555ac41 <+1>:     mov    rcx,rsi
+   0x000055555555ac44 <+4>:     movsxd rdx,edi
+   0x000055555555ac47 <+7>:     lea    rax,[rip+0xffffffffffffffd2]        # 0x55555555ac20 <_ZN13out_of_bounds4main17hff2564204c4f92b3E>
+   0x000055555555ac4e <+14>:    mov    QWORD PTR [rsp],rax
+   0x000055555555ac52 <+18>:    lea    rsi,[rip+0x4aa3f]        # 0x5555555a5698
+   0x000055555555ac59 <+25>:    mov    rdi,rsp
+   0x000055555555ac5c <+28>:    xor    r8d,r8d
+   0x000055555555ac5f <+31>:    call   QWORD PTR [rip+0x4cf73]        # 0x5555555a7bd8
+   0x000055555555ac65 <+37>:    pop    rcx
+   0x000055555555ac66 <+38>:    ret
+```
+
+***NOTE: The compiler does the range check for O3 optimization during compile time and throws the exception immediately (AKA: the compiler inlines the exception call in the assembly code)***
+
 
 <!-- C++: -->
 <!-- - Provides flexibility with both unsafe (operator[]) and safe (at()) access. -->
